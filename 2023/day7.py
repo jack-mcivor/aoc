@@ -1,7 +1,11 @@
 from collections import Counter, defaultdict
 from pathlib import Path
 
-cards = 'A K Q J T 9 8 7 6 5 4 3 2 J'.split()
+enable_jokers = True
+if enable_jokers:
+    cards = 'A K Q T 9 8 7 6 5 4 3 2 J'.split()
+else:
+    cards = 'A K Q J T 9 8 7 6 5 4 3 2'.split()
 _hand_scores = '5 4 3_2 3 2_2 2 1'.split()
 
 lines = """\
@@ -14,7 +18,6 @@ QQQJA 483
 lines = Path("2023/day7.txt").read_text().splitlines()
 
 scores_to_card_ranks_and_bids = [[], [], [], [], [], [], []]
-enable_jokers = True
 
 for line in lines:
     hand, bid_ = line.split()
@@ -39,8 +42,8 @@ for line in lines:
         5: {6: 0},
         4: {6: 0},
         3: {6:1, 5:0},
-        2: {6:3, 5:1, 3:0},  # 5
-        1: {6:5, 5:3, 3:1, 4:2, 1:0}  # 3
+        2: {6:3, 5:1, 3:0},
+        1: {6:5, 5:3, 3:1, 4:2, 1:0}
     }
     if 5 in counts:
         # 5 of a kind
@@ -66,19 +69,16 @@ for line in lines:
         # high card
         score = 6
     if enable_jokers and count_js:
-        if count_js == 1 and score == 1:
-            print()
-        print(hand, _hand_scores[score], f"{count_js=}, {score=}, {count_js_to_score_change[count_js][score]=}")
         score = count_js_to_score_change[count_js][score]
     card_ranks = tuple(cards.index(card) for card in hand)
     scores_to_card_ranks_and_bids[score].append((card_ranks, bid))
 
 rank = 0
 winnings = 0
-for _score, ranks_bids in enumerate(scores_to_card_ranks_and_bids[::-1]):
+# go from weakest to strongest hand
+for ranks_bids in scores_to_card_ranks_and_bids[::-1]:
     ranks_bids_sorted = sorted(ranks_bids, key=lambda x: x[0], reverse=True)
     for _r, bid in ranks_bids_sorted:
         rank += 1
         winnings += rank*bid
 print(winnings)
-# < 252322143
