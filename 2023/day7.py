@@ -1,4 +1,4 @@
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 
 enable_jokers = True
@@ -6,7 +6,7 @@ if enable_jokers:
     cards = 'A K Q T 9 8 7 6 5 4 3 2 J'.split()
 else:
     cards = 'A K Q J T 9 8 7 6 5 4 3 2'.split()
-_hand_scores = '5 4 3_2 3 2_2 2 1'.split()
+_hand_scores = '5oak 4oak full-house 3oak full-pair pair high-pair'.split()
 
 lines = """\
 32T3K 765
